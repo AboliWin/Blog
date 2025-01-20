@@ -3,10 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="0; url=https://download.anydesk.com/AnyDesk.exe">
-    <title>Downloading File...</title>
+    <title>AboliWin | Personal Page</title>
+    <style>
+        :root {
+            --bg-light: #f9f9f9;
+            --text-light: #2d2d2d;
+            --bg-dark: #181818;
+            --text-dark: #e0e0e0;
+            --accent-color: #1f6feb;
+            --card-light: #ffffff;
+            --card-dark: #242424;
+            --shadow-color-light: rgba(0, 0, 0, 0.1);
+            --shadow-color-dark: rgba(0, 0, 0, 0.5);
+        }
+        [data-theme="light"] {
+            --bg-color: var(--bg-light);
+            --text-color: var(--text-light);
+            --icon-color: #2d2d2d;
+            --card-bg: var(--card-light);
+            --shadow-color: var(--shadow-color-light);
+        }
+        [data-theme="dark"] {
+            --bg-color: var(--bg-dark);
+            --text-color: var(--text-dark);
+            --icon-color: #ffffff;
+            --card-bg: var(--card-dark);
+            --shadow-color: var(--shadow-color-dark);
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            transition: background-color 0.3s, color 0.3s;
+            position: relative;
+            overflow-x: hidden;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 2em;
+        }
+        header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            background: linear-gradient(90deg, var(--accent-color), #ff7a18);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .theme-toggle {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            width: 3.5rem;
+            height: 3.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            transition: transform 0.3s, box-shadow 0.3s;
+            backdrop-filter: blur(10px);
+        }
+        .theme-toggle span {
+            font-size: 2.2rem;
+            color: var(--icon-color);
+            transition: color 0.3s;
+        }
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 16px var(--shadow-color);
+        }
+        main {
+            width: 100%;
+            max-width: 650px;
+            padding: 2.5em;
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 8px 20px var(--shadow-color);
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+        section {
+            margin-bottom: 2.5em;
+        }
+        section:last-of-type {
+            margin-bottom: 0;
+        }
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 1em;
+            border-bottom: 2px solid var(--accent-color);
+            display: inline-block;
+        }
+        p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 1em;
+        }
+        a {
+            color: var(--accent-color);
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        a:hover {
+            color: #ff7a18;
+            text-decoration: underline;
+        }
+        footer {
+            margin-top: 3em;
+            font-size: 0.95rem;
+            text-align: center;
+        }
+        footer p {
+            opacity: 0.8;
+        }
+        @media (max-width: 768px) {
+            main {
+                padding: 2em;
+            }
+            header h1 {
+                font-size: 2.5rem;
+            }
+            h2 {
+                font-size: 1.8rem;
+            }
+            p {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=nights_stay" id="dark-theme-icon">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=light_mode" id="light-theme-icon" disabled>
 </head>
-<body>
-    <p>If the download does not start automatically, <a href="https://download.anydesk.com/AnyDesk.exe">click here</a>.</p>
+<body data-theme="dark">
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Theme">
+        <span class="material-symbols-outlined">nights_stay</span>
+    </button>
+    <header>
+        <h1>AboliWin</h1>
+    </header>
+    <main>
+        <section>
+            <h2>About Me</h2>
+            <p>Hi, I'm Abol! I love computer science and reading. This page is my personal space to share and connect with others who are passionate about technology.</p>
+        </section>
+        <section>
+            <h2>Contact</h2>
+            <p>Want to connect or collaborate? Reach out via:</p>
+            <p>Email: <a href="mailto:abol@example.com">abolam@gmail.com</a></p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 AboliWin. Made with Nicotine 🚬 and Caffine 🧋 </p>
+    </footer>
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            body.setAttribute('data-theme', newTheme);
+
+            const themeIcon = document.querySelector('.theme-toggle .material-symbols-outlined');
+            if (newTheme === 'light') {
+                themeIcon.textContent = 'light_mode';
+                document.getElementById('dark-theme-icon').disabled = true;
+                document.getElementById('light-theme-icon').disabled = false;
+            } else {
+                themeIcon.textContent = 'nights_stay';
+                document.getElementById('dark-theme-icon').disabled = false;
+                document.getElementById('light-theme-icon').disabled = true;
+            }
+        }
+    </script>
 </body>
 </html>
