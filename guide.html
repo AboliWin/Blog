@@ -8,7 +8,8 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+            background-color: #121212;
+            color: #e0e0e0;
             margin: 0;
             padding: 20px;
             display: flex;
@@ -16,26 +17,35 @@
         }
         .container {
             max-width: 800px;
-            background: white;
+            background: #1e1e1e;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
         h1 {
             text-align: center;
+            color: #bb86fc;
         }
         pre {
-            background: #272822;
+            background: #282c34;
             color: #f8f8f2;
-            padding: 10px;
+            padding: 15px;
             border-radius: 5px;
             overflow-x: auto;
         }
         code {
             font-family: 'Courier New', Courier, monospace;
-            background: #eee;
-            padding: 2px 4px;
-            border-radius: 3px;
+            background: #333;
+            color: #ffcb6b;
+            padding: 3px 6px;
+            border-radius: 4px;
+        }
+        a {
+            color: #8ab4f8;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -54,7 +64,7 @@
                     return response.text();
                 })
                 .then(markdown => {
-                    const converter = new showdown.Converter({ tables: true, simplifiedAutoLink: true, strikethrough: true });
+                    const converter = new showdown.Converter({ tables: true, simplifiedAutoLink: true, strikethrough: true, tasklists: true });
                     document.getElementById('content').innerHTML = converter.makeHtml(markdown);
                 })
                 .catch(error => {
