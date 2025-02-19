@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Viewer</title>
+    <script src="https://cdn.jsdelivr.net/npm/showdown/dist/showdown.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            max-width: 900px;
+            background: #1e1e1e;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #bb86fc;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        pre {
+            background: #282c34;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            white-space: pre;
+            word-wrap: normal;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            background: #282c34;
+            color: #ffcb6b;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        pre code {
+            display: block;
+            padding: 10px;
+            overflow-x: auto;
+            background: #282c34;
+        }
+        a {
+            color: #8ab4f8;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        ul, ol {
+            padding-left: 20px;
+        }
+        blockquote {
+            border-left: 4px solid #bb86fc;
+            margin: 10px 0;
+            padding-left: 15px;
+            color: #bdbdbd;
+            font-style: italic;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #444;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background: #333;
+            color: #bb86fc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Guide Fa</h1>
+        <div id="content">Loading...</div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('https://aboliwin.ir/guide.md')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to load content.');
+                    }
+                    return response.text();
+                })
+                .then(markdown => {
+                    const converter = new showdown.Converter({ tables: true, simplifiedAutoLink: true, strikethrough: true, tasklists: true });
+                    document.getElementById('content').innerHTML = converter.makeHtml(markdown);
+                })
+                .catch(error => {
+                    document.getElementById('content').innerHTML = `<p style="color: red; text-align: center;">Error: ${error.message}</p>`;
+                });
+        });
+    </script>
+</body>
+</html>
