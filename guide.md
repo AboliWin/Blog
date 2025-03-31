@@ -1,125 +1,127 @@
-# **Guide: Converting a Base-10 Number to Base-7 in C#**
+### Explanation of the Database Schema
 
-## **Introduction**
-Number systems are fundamental in computing. Base-10 (decimal) is the standard system we use daily, but computers often use different bases. In this guide, we'll explore how to convert a decimal (base-10) number into base-7 using C#.
-
----
-
-## **Understanding Base Conversion**
-To convert a decimal number \( N \) into base-7:
-1. Divide \( N \) by **7**.
-2. Record the **remainder**.
-3. Update \( N \) as the quotient (integer division).
-4. Repeat until \( N \) becomes 0.
-5. The base-7 number is formed by reading the remainders **in reverse order**.
-
-### **Why Use Base-7?**
-- Base-7 can be useful in specific computing applications, such as encoding systems and numbering schemes.
-- It is a good exercise for understanding number bases and conversion algorithms.
-- Helps in improving problem-solving skills for programming contests and interviews.
-
-### **Example Calculation**
-Let's convert **100 (base-10) to base-7**:
-
-| Step | N (Base 10) | N ÷ 7 | Quotient | Remainder |
-|------|------------|-------|----------|-----------|
-| 1    | 100        | 100 ÷ 7 | 14       | 2         |
-| 2    | 14         | 14 ÷ 7  | 2        | 0         |
-| 3    | 2          | 2 ÷ 7   | 0        | 2         |
-
-**Final Base-7 Number**: **202** (read bottom to top)
+This schema defines two tables: `users` and `game_servers`, each serving specific purposes for a system that deals with user management and game server configurations.
 
 ---
 
-## **C# Implementation**
-Here’s a simple C# program that converts a base-10 number to base-7 **without using built-in functions like `Math.Abs`**:
+#### **Users Table**
+The `users` table holds the data for each user registered in the system. Below are the details for each column:
 
-```csharp
-using System;
-
-class Program
-{
-    static string ConvertToBase7(int number)
-    {
-        if (number == 0) return "0"; // Edge case for 0
-
-        string result = "";
-        bool isNegative = false;
-
-        if (number < 0)
-        {
-            isNegative = true;
-            number = -number; // Manually converting to positive
-        }
-
-        while (number > 0)
-        {
-            int remainder = number % 7;
-            result = remainder + result; // Prepend remainder
-            number /= 7;
-        }
-
-        if (isNegative)
-        {
-            result = "-" + result;
-        }
-        
-        return result;
-    }
-
-    static void Main()
-    {
-        Console.Write("Enter a number in base-10: ");
-        int input = int.Parse(Console.ReadLine());
-
-        string base7 = ConvertToBase7(input);
-        Console.WriteLine($"Base-7 equivalent: {base7}");
-    }
-}
+```sql
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,  -- Auto-incrementing integer ID
+    uuid UUID UNIQUE DEFAULT gen_random_uuid(),  -- Unique UUID for each user
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    balance DECIMAL(10,2) DEFAULT 0.00 CHECK (balance >= 0),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_login_ip INET
+);
 ```
+
+1. **id** (SERIAL PRIMARY KEY):  
+   - The `id` is an auto-incrementing integer used as a unique identifier for each user.
+   - It is defined as the primary key of the table, ensuring no two users will have the same ID.
+
+2. **uuid** (UUID UNIQUE DEFAULT gen_random_uuid()):  
+   - A globally unique identifier (UUID) is assigned to each user.
+   - The `gen_random_uuid()` function generates a random UUID when a new user is created, guaranteeing the uniqueness of each `uuid`.
+   - The UUID ensures the user can be uniquely identified across different systems and databases.
+   
+3. **username** (VARCHAR(50) UNIQUE NOT NULL):  
+   - A string representing the user's name in the system, limited to 50 characters.
+   - The `UNIQUE` constraint ensures no two users can have the same username.
+   - It cannot be null, meaning every user must have a username.
+
+4. **email** (VARCHAR(255) UNIQUE NOT NULL):  
+   - A string to store the user's email address, with a maximum length of 255 characters.
+   - It is marked `UNIQUE`, preventing duplicate email addresses in the database.
+   - This field cannot be null, requiring an email address for each user.
+
+5. **password_hash** (TEXT NOT NULL):  
+   - Stores the hashed password of the user, ensuring sensitive data like passwords are not stored directly.
+   - The `NOT NULL` constraint ensures that every user must have a password hash upon creation.
+
+6. **balance** (DECIMAL(10,2) DEFAULT 0.00 CHECK (balance >= 0)):  
+   - A numeric value representing the user’s balance, stored as a decimal with two decimal places.
+   - The `DEFAULT 0.00` sets the initial balance to 0.
+   - The `CHECK (balance >= 0)` constraint ensures that the balance cannot go negative, enforcing valid financial data.
+
+7. **created_at** (TIMESTAMP DEFAULT CURRENT_TIMESTAMP):  
+   - Stores the timestamp of when the user was created in the system.
+   - The default value is the current timestamp at the time of insertion, automatically recording when the user registers.
+
+8. **last_login_ip** (INET):  
+   - This field stores the last known IP address the user logged in from.
+   - The `INET` type is used to store both IPv4 and IPv6 addresses, ensuring compatibility with various network protocols.
 
 ---
 
-## **How the Code Works**
-1. **Handles Edge Cases:** If the number is `0`, it directly returns `"0"`.
-2. **Manually Handles Negative Numbers:** Instead of `Math.Abs()`, we manually check if the number is negative and make it positive by multiplying by `-1`.
-3. **Loops Until the Number Becomes Zero:** Extracts digits using `% 7` and builds the result in reverse.
-4. **Manually Reconstructs the Negative Sign** if needed.
-5. **Displays the Final Base-7 Equivalent.**
+#### **Game Servers Table**
+The `game_servers` table stores information about the game servers in the system. Each server is associated with an owner (a user). Here's the breakdown of its columns:
 
-### **Breaking Down the Code**
-- **`ConvertToBase7(int number)`**: This function takes a decimal number and converts it to base-7.
-- **`if (number == 0) return "0";`**: Handles the special case where the input is 0.
-- **Handling Negative Numbers Manually**: Uses an `if` check instead of `Math.Abs()`.
-- **Building the Result**: Uses a `while` loop to calculate remainders and prepend them to the result string.
-- **Final Output**: The function returns the final base-7 representation.
+```sql
+CREATE TABLE game_servers (
+    id SERIAL PRIMARY KEY,  -- Auto-incrementing integer ID
+    uuid UUID UNIQUE DEFAULT gen_random_uuid(),  -- Unique UUID for each server
+    owner_id UUID NOT NULL REFERENCES users(uuid) ON DELETE CASCADE,  -- Reference to users.uuid
+    server_name VARCHAR(100) UNIQUE NOT NULL,
+    expiration_time TIMESTAMP NOT NULL,
+    game_version VARCHAR(50) NOT NULL,
+    domain VARCHAR(255) UNIQUE NOT NULL,
+    ip INET NOT NULL,  -- Using INET type for both IPv4 and IPv6
+    port INTEGER NOT NULL CHECK (port BETWEEN 1 AND 65535),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT unique_ip_port UNIQUE (ip, port) -- Prevent duplicate IP:Port pairs
+);
+```
+
+1. **id** (SERIAL PRIMARY KEY):  
+   - The `id` is an auto-incrementing integer uniquely identifying each game server.
+   - It is defined as the primary key, ensuring no two servers can have the same `id`.
+
+2. **uuid** (UUID UNIQUE DEFAULT gen_random_uuid()):  
+   - A unique UUID for each game server, ensuring the identification of servers across different systems.
+   - `gen_random_uuid()` automatically generates a random UUID when a new server is created.
+
+3. **owner_id** (UUID NOT NULL REFERENCES users(uuid) ON DELETE CASCADE):  
+   - This is a foreign key reference to the `uuid` in the `users` table, linking each server to its owner.
+   - The `ON DELETE CASCADE` clause ensures that if a user is deleted, all their associated game servers are automatically deleted as well.
+
+4. **server_name** (VARCHAR(100) UNIQUE NOT NULL):  
+   - The name of the game server, restricted to 100 characters.
+   - The `UNIQUE` constraint ensures that no two servers can share the same name.
+   - This field cannot be null, meaning each game server must have a name.
+
+5. **expiration_time** (TIMESTAMP NOT NULL):  
+   - The `expiration_time` represents when the game server will expire or be decommissioned.
+   - It must always have a valid timestamp, ensuring every server has a specified expiration time.
+
+6. **game_version** (VARCHAR(50) NOT NULL):  
+   - Specifies the version of the game running on the server.
+   - It is a required field, ensuring the game version is always recorded for each server.
+
+7. **domain** (VARCHAR(255) UNIQUE NOT NULL):  
+   - A string representing the domain of the game server, up to 255 characters.
+   - The `UNIQUE` constraint ensures that no two servers can have the same domain name.
+
+8. **ip** (INET NOT NULL):  
+   - The IP address of the game server, stored using the `INET` type, which can hold both IPv4 and IPv6 addresses.
+   - This field cannot be null, ensuring every game server has a valid IP address.
+
+9. **port** (INTEGER NOT NULL CHECK (port BETWEEN 1 AND 65535)):  
+   - The port number on which the game server is accessible.
+   - The `CHECK` constraint ensures that the port value is between 1 and 65535, adhering to valid port ranges for TCP/IP communication.
+
+10. **created_at** (TIMESTAMP DEFAULT CURRENT_TIMESTAMP):  
+    - The timestamp indicating when the game server was created.
+    - The default value is the current timestamp, automatically recording the server's creation time.
+
+11. **unique_ip_port** (CONSTRAINT UNIQUE (ip, port)):  
+    - This constraint ensures that each combination of `ip` and `port` is unique, preventing multiple servers from sharing the same IP address and port combination.
 
 ---
 
-## **Example Runs**
-```
-Enter a number in base-10: 100
-Base-7 equivalent: 202
-```
-```
-Enter a number in base-10: 49
-Base-7 equivalent: 100
-```
-```
-Enter a number in base-10: -35
-Base-7 equivalent: -50
-```
-
----
-
-## **Further Improvements**
-- **Recursive Implementation**: The function can be rewritten recursively.
-- **Supporting More Bases**: Generalizing the function to convert to any base.
-- **User Interface**: Creating a graphical interface for easier input/output.
-
----
-
-## **Conclusion**
-This guide covers the basics of base conversion and provides a clear method for converting decimal numbers to base-7. The C# implementation ensures efficient and accurate conversion while handling edge cases without relying on built-in functions like `Math.Abs()`.
-
-
+### Summary
+This schema effectively organizes users and their associated game servers, with each table containing essential fields to manage user authentication, game server configurations, and security constraints. The use of UUIDs ensures global uniqueness, and checks on balances, port numbers, and IP addresses ensure data integrity and consistency. The relationship between users and game servers is managed through foreign keys, with cascading deletions to maintain referential integrity.
